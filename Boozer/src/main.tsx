@@ -11,12 +11,10 @@ const router = createBrowserRouter([
 		path: "/",
 		element: <Root />,
 		errorElement: <ErrorPage />,
-    children: [
-      {
-        path: "spritskap",
-        element: <SpritSkåp />,
-      }
-    ]    
+	},
+	{
+		path: "spritskap",
+		element: <SpritSkåp />,
 	},
 ]);
 
@@ -25,6 +23,6 @@ if (rootElement) {
 	ReactDOM.createRoot(rootElement).render(
 		<React.StrictMode>
 			<RouterProvider router={router} />
-		</React.StrictMode>
+		</React.StrictMode>,
 	);
 }
