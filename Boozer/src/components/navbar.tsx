@@ -20,7 +20,7 @@ export default function Navbar() {
 			{
 				// If the user is on the spritskap page, show the copy button in the middle of the navbar
 				location.pathname === "/spritskap" && (
-					<>
+					<div className="boozeButtons">
 						<button
 							className="copy-button"
 							type="button"
@@ -33,9 +33,9 @@ export default function Navbar() {
 										brand: string;
 										volume: number;
 										percent: number;
-										note?: string;
+										notes?: string;
 									}) => {
-										return `${booze.name} ${booze.brand} ${booze.volume}ml ${booze.percent}% notes: ${booze.note || ""}\n`;
+										return `* ${booze.name} ${booze.brand} ${booze.volume}ml ${booze.percent}% \nnotes: ${booze.notes}\n\n`;
 									},
 								);
 								navigator.clipboard.writeText(
@@ -57,7 +57,16 @@ export default function Navbar() {
 								className="chatgpt-logo"
 							/>
 						</a>
-					</>
+						<button
+							className="copy-button clear-button"
+							type="button"
+							onClick={() =>
+								localStorage.setItem("savedBooze", JSON.stringify([]))
+							}
+						>
+							Clear
+						</button>
+					</div>
 				)
 			}
 			<img src={logo} alt="logo" />

@@ -292,3 +292,19 @@ body{
     width: 100%; /* Make logo fill the button */
     height: auto; /* Maintain aspect ratio */
 }
+
+.clear-button{
+    background-color: lightcoral;
+}
+
+.clear-button:hover{
+    background-color: red;
+}
+
+.boozeButtons{
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 60px;
+}
