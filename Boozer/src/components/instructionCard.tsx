@@ -9,7 +9,7 @@ export default function InstructionCard({
 
 	return (
 		<div
-			className="instructionCard"
+			className="instructionCard pressable"
 			onClick={() => redirectUrl && navigate(redirectUrl)}
 			onKeyUp={(e) => e.key === "Enter" && redirectUrl && navigate(redirectUrl)}
 			tabIndex={0}
