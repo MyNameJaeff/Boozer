@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import BoozeCard from "../components/boozeCard";
 import Navbar from "../components/navbar";
 import AddBooze from "../components/addBooze";
