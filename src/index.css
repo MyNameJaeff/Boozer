@@ -254,7 +254,7 @@ body{
 
 .copy-button {
     background-color: #4CAF50; /* Green */
-    color: white;
+    color: black;
     border: none;
     border-radius: 5px;
     padding: 10px 15px;
@@ -294,11 +294,11 @@ body{
 }
 
 .clear-button{
-    background-color: lightcoral;
+    background-color: rgb(255, 100, 100);
 }
 
 .clear-button:hover{
-    background-color: red;
+    background-color: rgb(255, 33, 33);
 }
 
 .boozeButtons{
