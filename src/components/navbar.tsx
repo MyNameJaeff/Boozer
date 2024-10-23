@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/react.svg";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 interface Booze {
 	volume: number;
@@ -41,6 +42,25 @@ export default function Navbar() {
 		setDropOutVisible(!dropOutVisible);
 	};
 
+	const handlePostRequest = async () => {
+		const logMessage = "Test";
+		sendPostRequest(logMessage);
+	}
+
+	// Function to send a POST request to the server
+	const sendPostRequest = async (logMessage: string) => {
+		try {
+			const response = await axios.post('https://localhost:7130/api/stringlogger/logstring', logMessage, {
+				headers: {
+					'Content-Type': 'application/json', // Set Content-Type
+				},
+			});
+			console.log(response.data);
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	};
+
 	return (
 		<nav className="navbar">
 			<h1
@@ -50,6 +70,10 @@ export default function Navbar() {
 			>
 				Boozer
 			</h1>
+
+			<button type="button" onClick={handlePostRequest} className="menu-toggle">
+				POST
+			</button>
 
 			{location.pathname === "/spritskap" && (
 				<div className="boozeButtons">
@@ -82,7 +106,9 @@ export default function Navbar() {
 							const dataNoImages = JSON.parse(
 								localStorage.getItem("savedBooze") || "[]",
 							).map((booze: Booze) => {
-								return `* ${booze.name} ${booze.brand} ${booze.volume}ml ${booze.percent}% \nnotes: ${booze.notes || ""}\n\n`;
+								return `* ${booze.name} ${booze.brand} ${booze.volume}ml ${
+									booze.percent
+								}% \nnotes: ${booze.notes || ""}\n\n`;
 							});
 							navigator.clipboard.writeText(
 								`${dropdownContent}\n${dataNoImages.join("")}`,
