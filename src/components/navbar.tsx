@@ -274,13 +274,35 @@ Extra: `;
 
 					<button
 						type="button"
-						onClick={() => navigate("/spritskap")}
-						onKeyUp={(e) => e.key === "Enter" && navigate("/spritskap")}
+						onClick={() => navigate("/inventory")}
+						onKeyUp={(e) => e.key === "Enter" && navigate("/inventory")}
 						className={`nav-button ${
-							location.pathname === "/spritskap" ? "active" : ""
+							location.pathname === "/inventory" ? "active" : ""
 						}`}
 					>
-						SpritSkåp
+						Inventory
+					</button>
+
+					<button
+						type="button"
+						onClick={() => navigate("/recipes")}
+						onKeyUp={(e) => e.key === "Enter" && navigate("/recipes")}
+						className={`nav-button ${
+							location.pathname === "/recipes" ? "active" : ""
+						}`}
+					>
+						Recipes
+					</button>
+
+					<button
+						type="button"
+						onClick={() => navigate("/about")}
+						onKeyUp={(e) => e.key === "Enter" && navigate("/about")}
+						className={`nav-button ${
+							location.pathname === "/about" ? "active" : ""
+						}`}
+					>
+						About
 					</button>
 				</div>
 			)}

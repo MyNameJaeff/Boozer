@@ -25,6 +25,7 @@ body{
     font-size: 25px;
     opacity: 1;
     letter-spacing: 8px;
+    position: sticky; /* Sticky for scrolling behavior */
 }
 .instructionsBox {
     height: 92%;
@@ -568,4 +569,15 @@ main{
 
 .add-button:hover{
     background-color: #0069d9;
+}
+
+.inventoryNav {
+    display: flex;
+    flex-direction: column;
+    position: sticky; /* Sticky for scrolling behavior */
+    left: 99vw;         /* Offset from the right edge of the screen */
+    top: 50%;          /* Start at 50% of the viewport height */
+    transform: translateY(-50%); /* Center the element vertically */
+    width: 5vw;        /* Width as 5% of the viewport width */
+    z-index: 5;        /* Ensure it's above other elements */
 }

@@ -40,12 +40,17 @@ export default function Inventory() {
 		<>
 			<Navbar />
 			<main>
+				<div className="inventoryNav">
+					<a href="#boozeList">Booze</a>
+					<a href="#extrasList">Extras</a>
+				</div>
+
 				<AddBooze
 					setSavedBooze={setSavedBooze}
 					setSavedExtras={setSavedExtras}
 				/>
 				<h2>Booze</h2>
-				<div className="boozeList">
+				<div className="boozeList" id="boozeList">
 					{savedBooze.map((booze, index) => (
 						<BoozeCard
 							// biome-ignore lint/suspicious/noArrayIndexKey: <I dont care about index>
@@ -57,8 +62,9 @@ export default function Inventory() {
 					))}
 				</div>
 				<div className="divider" />
+
 				<h2>Extras</h2>
-				<div className="extrasList">
+				<div className="extrasList" id="extrasList">
 					{savedExtras.map((extra, index) => (
 						<ExtraCard
 							// biome-ignore lint/suspicious/noArrayIndexKey: <I dont care about index>
