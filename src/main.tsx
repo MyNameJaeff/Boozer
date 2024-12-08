@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Root from "./routes/root.tsx";
 import ErrorPage from "./error-page.tsx";
-import SpritSkåp from "./routes/spritskap";
+import Inventory from "./routes/inventory.tsx";
 
 const router = createBrowserRouter([
 	{
@@ -13,8 +13,8 @@ const router = createBrowserRouter([
 		errorElement: <ErrorPage />,
 	},
 	{
-		path: "spritskap",
-		element: <SpritSkåp />,
+		path: "inventory",
+		element: <Inventory />,
 	},
 ]);
 

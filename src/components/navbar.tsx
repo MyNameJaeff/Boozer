@@ -11,10 +11,18 @@ interface Booze {
 }
 
 export default function Navbar() {
+	const promptText = `Fill in all blank data exept notes, split each data into it's own array but keep it in one text-area. Give me data in the form of: "booze": [{"name": "", "brand": "", "volume": , "percent": , "notes": "", "imageUrl": ""}], "extra": [{"name": "", "amount": "", "notes": "", "imageUrl": ""}]
+
+Booze:  
+
+Extra: `;
 	const navigate = useNavigate();
 	const [dropdownVisible, setDropdownVisible] = useState(false);
+	const [dropdown2Visible, setDropdown2Visible] = useState(false);
 	const [dropOutVisible, setDropOutVisible] = useState(false);
 	const [dropdownContent, setDropdownContent] = useState("");
+
+	const [replaceData, setReplaceData] = useState("");
 
 	// Fetch from localStorage when the component mounts
 	useEffect(() => {
@@ -25,7 +33,7 @@ export default function Navbar() {
 		const savedPrompt = localStorage.getItem("gptPrompt");
 		if (savedPrompt === null) {
 			const defaultPrompt =
-				"Give me 5 recipes (only ingredients and instructions formatted in a good way) in metric using this data:";
+				"Give me 5 random recipes (only ingredients and instructions formatted in a good way) in metric using this data, try to make them as diffrent as possible:";
 			localStorage.setItem("gptPrompt", JSON.stringify(defaultPrompt));
 			setDropdownContent(defaultPrompt);
 		} else {
@@ -41,6 +49,20 @@ export default function Navbar() {
 		setDropOutVisible(!dropOutVisible);
 	};
 
+	const copyToClipboard = () => {
+		const textarea = document.createElement("textarea");
+		textarea.value = promptText;
+		textarea.setAttribute("readonly", "");
+		textarea.style.position = "absolute";
+		textarea.style.left = "-9999px";
+		document.body.appendChild(textarea);
+		textarea.select();
+		document.execCommand("copy");
+		document.body.removeChild(textarea);
+
+		alert("Prompt copied to clipboard!");
+	};
+
 	return (
 		<nav className="navbar">
 			<h1
@@ -51,7 +73,7 @@ export default function Navbar() {
 				Boozer
 			</h1>
 
-			{location.pathname === "/spritskap" && (
+			{location.pathname === "/inventory" && (
 				<div className="boozeButtons">
 					<button
 						type="button"
@@ -75,17 +97,103 @@ export default function Navbar() {
 						</div>
 					)}
 
+					{dropdown2Visible && (
+						<div className="dropdown2">
+							<p>Copy this prompt, then write your data after each `:`</p>
+							<textarea
+								readOnly
+								value={promptText}
+								style={{
+									width: "100%",
+									height: "100px",
+									padding: "8px",
+									marginBottom: "8px",
+								}}
+							/>
+							<button
+								type="button"
+								onClick={copyToClipboard}
+								className="clipboard-button"
+							>
+								Copy Text
+							</button>{" "}
+							<p>Paste your response below and press the send button</p>
+							<textarea
+								value={replaceData}
+								onChange={(e) => setReplaceData(e.target.value)}
+								placeholder="Paste your JSON response here..."
+								style={{
+									width: "100%",
+									height: "150px",
+									border: "1px solid #ccc",
+									padding: "8px",
+								}}
+							/>
+							<input
+								type="submit"
+								className="send-button"
+								value="Send"
+								onClick={() => {
+									// Example JSON data
+									const data = JSON.parse(replaceData);
+
+									// Save "booze" data
+									try {
+										const savedBooze = JSON.parse(
+											localStorage.getItem("savedBooze") || "[]",
+										);
+										const updatedBooze = [...savedBooze, ...data.booze];
+										localStorage.setItem(
+											"savedBooze",
+											JSON.stringify(updatedBooze),
+										);
+										//setSavedBooze(updatedBooze); // Assuming you have a state hook
+									} catch (error) {
+										console.error("Error saving booze data:", error);
+									}
+
+									// Save "extra" data
+									try {
+										const savedExtras = JSON.parse(
+											localStorage.getItem("savedExtras") || "[]",
+										);
+										const updatedExtras = [...savedExtras, ...data.extra];
+										localStorage.setItem(
+											"savedExtras",
+											JSON.stringify(updatedExtras),
+										);
+										//setSavedExtras(updatedExtras); // Assuming you have a state hook
+									} catch (error) {
+										console.error("Error saving extra data:", error);
+									}
+
+									// Reload the page
+									window.location.reload();
+								}}
+							/>
+						</div>
+					)}
+
 					<button
 						className="copy-button"
 						type="button"
 						onClick={() => {
-							const dataNoImages = JSON.parse(
+							const boozeDataNoImages = JSON.parse(
 								localStorage.getItem("savedBooze") || "[]",
 							).map((booze: Booze) => {
 								return `* ${booze.name} ${booze.brand} ${booze.volume}ml ${booze.percent}% \nnotes: ${booze.notes || ""}\n\n`;
 							});
+
+							const extrasDataNoImages = JSON.parse(
+								localStorage.getItem("savedExtras") || "[]",
+							).map(
+								(extra: { name: string; amount: string; notes?: string }) => {
+									return `* ${extra.name} ${extra.amount} \nnotes: ${extra.notes || ""}\n\n`;
+								},
+							);
+
 							navigator.clipboard.writeText(
-								`${dropdownContent}\n${dataNoImages.join("")}`,
+								`${dropdownContent}\n${boozeDataNoImages.join("")} I also have these extras: \n${extrasDataNoImages.join("")}`,
 							);
 						}}
 					>
@@ -109,10 +217,29 @@ export default function Navbar() {
 						className="copy-button clear-button"
 						type="button"
 						onClick={() => {
+							// Prompt the user before deleting
+							if (
+								!window.confirm(
+									"Are you sure you want to clear your inventory?",
+								)
+							) {
+								return;
+							}
+
 							localStorage.setItem("savedBooze", JSON.stringify([]));
+							localStorage.setItem("savedExtras", JSON.stringify([]));
 						}}
 					>
 						Clear
+					</button>
+					<button
+						className="copy-button add-button"
+						type="button"
+						onClick={() => {
+							setDropdown2Visible(!dropdown2Visible);
+						}}
+					>
+						Add
 					</button>
 				</div>
 			)}

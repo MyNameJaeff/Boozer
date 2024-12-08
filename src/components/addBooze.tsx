@@ -8,53 +8,87 @@ interface Booze {
 	imageUrl: string;
 	notes?: string;
 }
-interface AddBoozeProps {
-	setSavedBooze: (booze: Booze[]) => void; // Define the props correctly
+
+interface Extras {
+	name: string;
+	amount: string;
+	notes?: string;
+	imageUrl: string;
 }
 
-export default function AddBooze({ setSavedBooze }: AddBoozeProps) {
-	const [volume, setAmount] = useState(""); // State for the volume of the booze
-	const [percent, setPrice] = useState(""); // State for the percent of the booze
-	const [name, setName] = useState(""); // State for the name of the booze
-	const [brand, setType] = useState(""); // State for the brand of the booze
-	const [imageUrl, setImageUrl] = useState(""); // State for the image URL of the booze
-	const [isOpen, setIsOpen] = useState(false); // State to control the visibility of the popup
+interface AddBoozeProps {
+	setSavedBooze: (booze: Booze[]) => void;
+	setSavedExtras: (extras: Extras[]) => void;
+}
+export default function AddBooze({
+	setSavedBooze,
+	setSavedExtras,
+}: AddBoozeProps) {
+	const [volume, setVolume] = useState("");
+	const [percent, setPercent] = useState("");
+	const [name, setName] = useState("");
+	const [brand, setBrand] = useState("");
+	const [imageUrl, setImageUrl] = useState("");
+	const [amount, setAmount] = useState("");
+
+	const [isOpen, setIsOpen] = useState(false);
+	const [selectedType, setSelectedType] = useState<"booze" | "extra" | "">("");
 
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
-		try {
-			const booze: Booze = {
-				volume: Number(volume),
-				percent: Number(percent),
-				name,
-				brand,
-				imageUrl,
-				notes: "",
-			};
 
-			if (imageUrl === "") {
-				booze.imageUrl =
-					"https://media.wired.com/photos/5926ba4f8d4ebc5ab806b486/master/w_2560%2Cc_limit/Booze-152406106.jpg";
+		if (selectedType === "booze") {
+			try {
+				const booze: Booze = {
+					volume: Number(volume),
+					percent: Number(percent),
+					name,
+					brand,
+					imageUrl: imageUrl || "https://via.placeholder.com/150?text=No+Image",
+					notes: "",
+				};
+
+				const savedBooze = JSON.parse(
+					localStorage.getItem("savedBooze") || "[]",
+				);
+				localStorage.setItem(
+					"savedBooze",
+					JSON.stringify([...savedBooze, booze]),
+				);
+				setSavedBooze([...savedBooze, booze]);
+			} catch (error) {
+				console.error(error);
 			}
-
-			// Save the booze to localStorage
-			const savedBooze = JSON.parse(localStorage.getItem("savedBooze") || "[]");
-			localStorage.setItem(
-				"savedBooze",
-				JSON.stringify([...savedBooze, booze]),
-			);
-			setSavedBooze([...savedBooze, booze]);
-
-			// Reset input fields
-			setAmount("");
-			setPrice("");
-			setName("");
-			setType("");
-			setImageUrl("");
-			setIsOpen(false);
-		} catch (error) {
-			console.error(error);
+		} else if (selectedType === "extra") {
+			try {
+				const extra: Extras = {
+					name,
+					amount,
+					imageUrl: imageUrl || "https://via.placeholder.com/150?text=No+Image",
+					notes: "",
+				};
+				console.log("Extra saved:", extra);
+				const savedExtras = JSON.parse(
+					localStorage.getItem("savedExtras") || "[]",
+				);
+				localStorage.setItem(
+					"savedExtras",
+					JSON.stringify([...savedExtras, extra]),
+				);
+				setSavedExtras([...savedExtras, extra]);
+			} catch (error) {
+				console.error(error);
+			}
 		}
+
+		setVolume("");
+		setPercent("");
+		setName("");
+		setBrand("");
+		setImageUrl("");
+		setAmount("");
+		setSelectedType("");
+		setIsOpen(false);
 	};
 
 	return (
@@ -76,59 +110,117 @@ export default function AddBooze({ setSavedBooze }: AddBoozeProps) {
 					>
 						<span className="plus-sign">✖</span>
 					</button>
-					<h1>Add Booze</h1>
-					<form onSubmit={handleSubmit}>
-						<label>
-							Volume (ml):
-							<input
-								placeholder="Ex. 700, 750, etc."
-								required
-								type="text"
-								value={volume}
-								onChange={(e) => setAmount(e.target.value)}
-							/>
-						</label>
-						<label>
-							Percent (%):
-							<input
-								placeholder="Ex. 40, 50, etc."
-								required
-								type="text"
-								value={percent}
-								onChange={(e) => setPrice(e.target.value)}
-							/>
-						</label>
-						<label>
-							Name:
-							<input
-								placeholder="Ex. Absolut Vodka, etc."
-								required
-								type="text"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-							/>
-						</label>
-						<label>
-							Brand:
-							<input
-								placeholder="Ex. Absolut, Bacardi, etc."
-								required
-								type="text"
-								value={brand}
-								onChange={(e) => setType(e.target.value)}
-							/>
-						</label>
-						<label>
-							Image URL:
-							<input
-								placeholder="Not required, but recommended"
-								type="text"
-								value={imageUrl}
-								onChange={(e) => setImageUrl(e.target.value)}
-							/>
-						</label>
-						<button type="submit">ADD</button>
-					</form>
+					<h1>Add Item</h1>
+					<div className="selectTypeButtonDiv">
+						<button
+							type="button"
+							className="selectTypeButton"
+							onClick={() => setSelectedType("booze")}
+						>
+							Booze
+						</button>
+						<button
+							type="button"
+							className="selectTypeButton"
+							onClick={() => setSelectedType("extra")}
+						>
+							Extra
+						</button>
+					</div>
+
+					{selectedType && (
+						<form onSubmit={handleSubmit}>
+							{selectedType === "booze" && (
+								<>
+									<label>
+										Volume (ml):
+										<input
+											placeholder="Ex. 700, 750, etc."
+											required
+											type="text"
+											value={volume}
+											onChange={(e) => setVolume(e.target.value)}
+										/>
+									</label>
+									<label>
+										Percent (%):
+										<input
+											placeholder="Ex. 40, 50, etc."
+											required
+											type="text"
+											value={percent}
+											onChange={(e) => setPercent(e.target.value)}
+										/>
+									</label>
+									<label>
+										Name:
+										<input
+											placeholder="Ex. Absolut Vodka, etc."
+											required
+											type="text"
+											value={name}
+											onChange={(e) => setName(e.target.value)}
+										/>
+									</label>
+									<label>
+										Brand:
+										<input
+											placeholder="Ex. Absolut, Bacardi, etc."
+											required
+											type="text"
+											value={brand}
+											onChange={(e) => setBrand(e.target.value)}
+										/>
+									</label>
+									<label>
+										Image URL:
+										<input
+											placeholder="Not required, but recommended"
+											type="text"
+											value={imageUrl}
+											onChange={(e) => setImageUrl(e.target.value)}
+										/>
+									</label>
+								</>
+							)}
+
+							{selectedType === "extra" && (
+								<>
+									<label>
+										Name:
+										<input
+											placeholder="Extra item name"
+											required
+											type="text"
+											value={name}
+											onChange={(e) => setName(e.target.value)}
+										/>
+									</label>
+									<label>
+										Amount:
+										<input
+											placeholder="Quantity (ex. 1000ml, 1kg, etc.)"
+											required
+											type="text"
+											value={amount}
+											onChange={(e) => setAmount(e.target.value)}
+										/>
+									</label>
+									<label>
+										Image URL:
+										<input
+											placeholder="Not required, but recommended"
+											type="text"
+											value={imageUrl}
+											onChange={(e) => setImageUrl(e.target.value)}
+										/>
+									</label>
+								</>
+							)}
+
+							<button type="submit">ADD</button>
+						</form>
+					)}
 				</div>
 			)}
 		</div>

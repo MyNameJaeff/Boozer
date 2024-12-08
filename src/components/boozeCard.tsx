@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function BoozeCard({
 	booze,
@@ -25,7 +25,14 @@ export default function BoozeCard({
 		}[],
 	) => void; // Add this to update the savedBooze state
 }) {
-	const [notes, setNotes] = React.useState(booze.notes || ""); // Initialize with existing notes
+	const [notes, setNotes] = useState(booze.notes || ""); // Initialize with existing notes
+	const [isEditing, setIsEditing] = useState(false);
+
+	const [volume, setVolume] = useState(booze.volume.toString());
+	const [percent, setPercent] = useState(booze.percent.toString());
+	const [name, setName] = useState(booze.name);
+	const [brand, setBrand] = useState(booze.brand);
+	const [imageUrl, setImageUrl] = useState(booze.imageUrl || "");
 
 	// Update local storage whenever notes change
 	const updateNotes = (newNotes: string) => {
@@ -39,29 +46,159 @@ export default function BoozeCard({
 
 	return (
 		<div className="boozeCard">
-			<img
-				src={
-					booze.imageUrl ||
-					"https://media.wired.com/photos/5926ba4f8d4ebc5ab806b486/master/w_2560%2Cc_limit/Booze-152406106.jpg"
-				}
-				alt={booze.name}
-				className="booze-image"
-			/>
-			<div className="line" />
-			<h2 className="boozeName">{booze.name}</h2>
-			<p className="boozeVolume">
-				{booze.volume} ml, {booze.percent}%
-			</p>
-			<p className="boozeBrand">
-				<i>{booze.brand}</i>
-			</p>
-			<textarea
-				className="boozeNotes"
-				placeholder="Add notes here"
-				value={notes} // Control the textarea value
-				onChange={(e) => updateNotes(e.target.value)} // Call updateNotes function on change
-				spellCheck={false}
-			/>
+			{
+				// Show the notes textarea only when editing
+				isEditing && (
+					<form className="editForm">
+						<label>
+							Volume (ml):
+							<input
+								placeholder="Ex. 700, 750, etc."
+								required
+								type="text"
+								value={volume}
+								onChange={(e) => setVolume(e.target.value)}
+							/>
+						</label>
+						<label>
+							Percent (%):
+							<input
+								placeholder="Ex. 40, 50, etc."
+								required
+								type="text"
+								value={percent}
+								onChange={(e) => setPercent(e.target.value)}
+							/>
+						</label>
+						<label>
+							Name:
+							<input
+								placeholder="Ex. Absolut Vodka, etc."
+								required
+								type="text"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+							/>
+						</label>
+						<label>
+							Brand:
+							<input
+								placeholder="Ex. Absolut, Bacardi, etc."
+								required
+								type="text"
+								value={brand}
+								onChange={(e) => setBrand(e.target.value)}
+							/>
+						</label>
+						<label>
+							Image URL:
+							<input
+								placeholder="Not required, but recommended"
+								type="text"
+								value={imageUrl}
+								onChange={(e) => setImageUrl(e.target.value)}
+							/>
+						</label>
+						<div className="submitButtonsEdit">
+							<input
+								type="submit"
+								value="Save"
+								className="saveButton"
+								onClick={(e) => {
+									e.preventDefault();
+									const savedBooze = JSON.parse(
+										localStorage.getItem("savedBooze") || "[]",
+									);
+									savedBooze[index] = {
+										volume: Number.parseInt(volume, 10),
+										percent: Number.parseInt(percent, 10),
+										name,
+										brand,
+										imageUrl,
+										notes,
+									};
+									localStorage.setItem(
+										"savedBooze",
+										JSON.stringify(savedBooze),
+									);
+									setSavedBooze(savedBooze);
+									setIsEditing(false);
+								}}
+							/>
+							<input
+								type="button"
+								value="Delete"
+								className="deleteButton"
+								onClick={() => {
+									// Prompt the user before deleting
+									if (
+										!window.confirm("Are you sure you want to delete this?")
+									) {
+										return;
+									}
+
+									const savedBooze = JSON.parse(
+										localStorage.getItem("savedBooze") || "[]",
+									);
+									savedBooze.splice(index, 1);
+									localStorage.setItem(
+										"savedBooze",
+										JSON.stringify(savedBooze),
+									);
+									setSavedBooze(savedBooze);
+									setIsEditing(false);
+								}}
+							/>
+						</div>
+					</form>
+				)
+			}
+
+			{
+				// Show the notes div when not editing
+				!isEditing && (
+					<>
+						<div className="editButtonDiv">
+							<button
+								type="button"
+								className="editButton"
+								onClick={() => {
+									setIsEditing(!isEditing);
+								}}
+							>
+								<img
+									src="https://assets.streamlinehq.com/image/private/w_300,h_300,ar_1/f_auto/v1/icons/messages-conversation/pen-2-wq05z1jnvxpgincvtyhg0l.png/pen-2-en9y4kfl441o0fxtbruf5.png?_a=DAJFJtWIZAAC"
+									alt="Edit"
+									className="editButtonImage"
+								/>
+							</button>
+						</div>
+						<img
+							src={
+								booze.imageUrl ||
+								"https://media.wired.com/photos/5926ba4f8d4ebc5ab806b486/master/w_2560%2Cc_limit/Booze-152406106.jpg"
+							}
+							alt={booze.name}
+							className="booze-image"
+						/>
+						<div className="line" />
+						<h2 className="boozeName">{booze.name}</h2>
+						<p className="boozeVolume">
+							{booze.volume} ml, {booze.percent}%
+						</p>
+						<p className="boozeBrand">
+							<i>{booze.brand}</i>
+						</p>
+						<textarea
+							className="boozeNotes"
+							placeholder="Add notes here"
+							value={notes} // Control the textarea value
+							onChange={(e) => updateNotes(e.target.value)} // Call updateNotes function on change
+							spellCheck={false}
+						/>
+					</>
+				)
+			}
 		</div>
 	);
 }
