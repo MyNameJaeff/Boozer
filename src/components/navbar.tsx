@@ -11,11 +11,13 @@ interface Booze {
 }
 
 export default function Navbar() {
-	const promptText = `Fill in all blank data exept notes, split each data into it's own array but keep it in one text-area. Give me data in the form of: "booze": [{"name": "", "brand": "", "volume": , "percent": , "notes": "", "imageUrl": ""}], "extra": [{"name": "", "amount": "", "notes": "", "imageUrl": ""}]
+	const promptText = `Fill in all blank data exept notes, split each data into it's own array but keep it in one text-area. Give me data in the form of: {"booze": [{"name": "", "brand": "", "volume": , "percent": , "notes": "", "imageUrl": ""}], "extra": [{"name": "", "amount": "", "notes": "", "imageUrl": ""}]}
 
 Booze:  
 
 Extra: `;
+	const defaultPrompt =
+		"Give me 5 random recipes (only ingredients and instructions formatted in a good way) in metric using this data, try to make them as diffrent as possible:";
 	const navigate = useNavigate();
 	const [dropdownVisible, setDropdownVisible] = useState(false);
 	const [dropdown2Visible, setDropdown2Visible] = useState(false);
@@ -32,8 +34,6 @@ Extra: `;
 
 		const savedPrompt = localStorage.getItem("gptPrompt");
 		if (savedPrompt === null) {
-			const defaultPrompt =
-				"Give me 5 random recipes (only ingredients and instructions formatted in a good way) in metric using this data, try to make them as diffrent as possible:";
 			localStorage.setItem("gptPrompt", JSON.stringify(defaultPrompt));
 			setDropdownContent(defaultPrompt);
 		} else {
@@ -195,6 +195,7 @@ Extra: `;
 							navigator.clipboard.writeText(
 								`${dropdownContent}\n${boozeDataNoImages.join("")} I also have these extras: \n${extrasDataNoImages.join("")}`,
 							);
+							alert("Prompt and inventory copied to clipboard!");
 						}}
 					>
 						Copy
@@ -265,9 +266,8 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/")}
-						className={`nav-button ${
-							location.pathname === "/" ? "active" : ""
-						}`}
+						className={`nav-button ${location.pathname === "/" ? "active" : ""
+							}`}
 					>
 						Home
 					</button>
@@ -276,9 +276,8 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/inventory")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/inventory")}
-						className={`nav-button ${
-							location.pathname === "/inventory" ? "active" : ""
-						}`}
+						className={`nav-button ${location.pathname === "/inventory" ? "active" : ""
+							}`}
 					>
 						Inventory
 					</button>
@@ -287,9 +286,8 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/recipes")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/recipes")}
-						className={`nav-button ${
-							location.pathname === "/recipes" ? "active" : ""
-						}`}
+						className={`nav-button ${location.pathname === "/recipes" ? "active" : ""
+							}`}
 					>
 						Recipes
 					</button>
@@ -298,9 +296,8 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/about")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/about")}
-						className={`nav-button ${
-							location.pathname === "/about" ? "active" : ""
-						}`}
+						className={`nav-button ${location.pathname === "/about" ? "active" : ""
+							}`}
 					>
 						About
 					</button>

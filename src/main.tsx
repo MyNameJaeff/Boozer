@@ -23,6 +23,7 @@ if (rootElement) {
 	ReactDOM.createRoot(rootElement).render(
 		<React.StrictMode>
 			<RouterProvider router={router} />
+			<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 		</React.StrictMode>,
 	);
 }
