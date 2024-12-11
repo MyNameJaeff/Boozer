@@ -15,7 +15,7 @@ export default function Navbar({
 	setSavedBooze = () => {},
 	setSavedExtras = () => {},
 }: {
-	setSavedBooze: (
+	setSavedBooze?: (
 		booze: {
 			volume: number;
 			percent: number;
@@ -25,7 +25,7 @@ export default function Navbar({
 			notes?: string;
 		}[],
 	) => void; // Add this to update the savedBooze state
-	setSavedExtras: (
+	setSavedExtras?: (
 		extras: { name: string; amount: string; imageUrl?: string }[],
 	) => void; // Add this to update the savedExtras state
 }) {
