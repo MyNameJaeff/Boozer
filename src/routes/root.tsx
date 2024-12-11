@@ -5,7 +5,8 @@ import Instructions from "../components/instructions";
 export default function Root() {
 	return (
 		<>
-			<Navbar />
+			{/* Not good but works? */}
+			<Navbar setSavedBooze={() => {}} setSavedExtras={() => {}} />
 			<div className="instructionsBox">
 				<Instructions />
 			</div>

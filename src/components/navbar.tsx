@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/react.svg";
 import { useState, useEffect } from "react";
+//import { set } from "firebase/database";
 
 interface Booze {
 	volume: number;
@@ -10,7 +11,24 @@ interface Booze {
 	notes?: string;
 }
 
-export default function Navbar() {
+export default function Navbar({
+	setSavedBooze = () => {},
+	setSavedExtras = () => {},
+}: {
+	setSavedBooze: (
+		booze: {
+			volume: number;
+			percent: number;
+			name: string;
+			brand: string;
+			imageUrl?: string;
+			notes?: string;
+		}[],
+	) => void; // Add this to update the savedBooze state
+	setSavedExtras: (
+		extras: { name: string; amount: string; imageUrl?: string }[],
+	) => void; // Add this to update the savedExtras state
+}) {
 	const promptText = `Fill in all blank data exept notes, split each data into it's own array but keep it in one text-area. Give me data in the form of: {"booze": [{"name": "", "brand": "", "volume": , "percent": , "notes": "", "imageUrl": ""}], "extra": [{"name": "", "amount": "", "notes": "", "imageUrl": ""}]}
 
 Booze:  
@@ -172,7 +190,7 @@ Extra: `;
 											"savedBooze",
 											JSON.stringify(updatedBooze),
 										);
-										//setSavedBooze(updatedBooze); // Assuming you have a state hook
+										setSavedBooze(updatedBooze); // Assuming you have a state hook
 									} catch (error) {
 										console.error("Error saving booze data:", error);
 									}
@@ -187,13 +205,13 @@ Extra: `;
 											"savedExtras",
 											JSON.stringify(updatedExtras),
 										);
-										//setSavedExtras(updatedExtras); // Assuming you have a state hook
+										setSavedExtras(updatedExtras); // Assuming you have a state hook
 									} catch (error) {
 										console.error("Error saving extra data:", error);
 									}
 
-									// Reload the page
-									window.location.reload();
+									alert("Data saved successfully!");
+									setDropdown2Visible(false);
 								}}
 							/>
 						</div>

@@ -113,7 +113,7 @@ export default function Inventory() {
 
 	return (
 		<>
-			<Navbar />
+			<Navbar setSavedBooze={setSavedBooze} setSavedExtras={setSavedExtras} />
 			<main>
 				<div className="inventoryNav">
 					<a href="#boozeList">Booze</a>

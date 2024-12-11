@@ -175,7 +175,7 @@ export default function BoozeCard({
 						</div>
 						{!booze.imageUrl && (
 							<a
-								href={`https://www.google.com/search?tbm=isch&q=${booze.name.split(" ").join("+")}&tbs=ic:trans`}
+								href={`https://www.google.com/search?tbm=isch&q=${booze.brand}+${booze.name.split(" ").join("+")}&tbs=ic:trans`}
 								target="_blank"
 								rel="noreferrer"
 								className="booze-image"

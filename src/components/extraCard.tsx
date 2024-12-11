@@ -134,31 +134,34 @@ export default function ExtraCard({
 							/>
 						</button>
 					</div>
-					{
-						!extra.imageUrl && (
-							<a href={`https://www.google.com/search?tbm=isch&q=${extra.name.split(" ").join("+")}&tbs=ic:trans`} target="_blank" className="booze-image">
-								<p
-									style={{
-										marginTop: "25%",
-										textAlign: "center",
-										color: "white",
-										fontSize: "1em",
-										fontWeight: "bold",
-									}}
-								>No image found. Click to search</p>
-							</a>
-						)
-					}
+					{!extra.imageUrl && (
+						<a
+							href={`https://www.google.com/search?tbm=isch&q=${extra.name.split(" ").join("+")}&tbs=ic:trans`}
+							target="_blank"
+							rel="noreferrer"
+							className="booze-image"
+						>
+							<p
+								style={{
+									marginTop: "25%",
+									textAlign: "center",
+									color: "white",
+									fontSize: "1em",
+									fontWeight: "bold",
+								}}
+							>
+								No image found. Click to search
+							</p>
+						</a>
+					)}
 
-					{
-						extra.imageUrl && (
-							<img
-								src={extra.imageUrl}
-								alt={extra.name}
-								className="extra-image"
-							/>
-						)
-					}
+					{extra.imageUrl && (
+						<img
+							src={extra.imageUrl}
+							alt={extra.name}
+							className="extra-image"
+						/>
+					)}
 					<div className="line" />
 					<h2 className="extraName">{extra.name}</h2>
 					<p className="extraAmount">{extra.amount}</p>
