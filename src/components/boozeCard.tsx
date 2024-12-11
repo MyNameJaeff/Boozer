@@ -173,33 +173,37 @@ export default function BoozeCard({
 								/>
 							</button>
 						</div>
-						{
-							!booze.imageUrl && (
-								<a href={`https://www.google.com/search?tbm=isch&q=${booze.name.split(" ").join("+")}&tbs=ic:trans`} target="_blank" className="booze-image">
-									<p 
-										style={{
-											marginTop: "25%",
-											textAlign: "center",
-											color: "white",
-											fontSize: "1em",
-											fontWeight: "bold",
-										}}
-									>No image found. Click to search</p>
-								</a>
-							)
-						}
+						{!booze.imageUrl && (
+							<a
+								href={`https://www.google.com/search?tbm=isch&q=${booze.name.split(" ").join("+")}&tbs=ic:trans`}
+								target="_blank"
+								rel="noreferrer"
+								className="booze-image"
+							>
+								<p
+									style={{
+										marginTop: "25%",
+										textAlign: "center",
+										color: "white",
+										fontSize: "1em",
+										fontWeight: "bold",
+									}}
+								>
+									No image found. Click to search
+								</p>
+							</a>
+						)}
 
-						{
-							booze.imageUrl && (
-								<img
-									src={
-										booze.imageUrl || "https://via.placeholder.com/150?text=No+Image"
-									}
-									alt={booze.name}
-									className="booze-image"
-								/>
-							)
-						}
+						{booze.imageUrl && (
+							<img
+								src={
+									booze.imageUrl ||
+									"https://via.placeholder.com/150?text=No+Image"
+								}
+								alt={booze.name}
+								className="booze-image"
+							/>
+						)}
 						<div className="line" />
 						<h2 className="boozeName">{booze.name}</h2>
 						<p className="boozeVolume">

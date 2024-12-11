@@ -108,7 +108,7 @@ export default function AddBooze({
 						type="button"
 						onClick={() => setIsOpen(false)}
 					>
-						<span className="plus-sign">✖</span>
+						<span className="x-sign">✖</span>
 					</button>
 					<h1>Add Item</h1>
 					<div className="selectTypeButtonDiv">

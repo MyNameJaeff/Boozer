@@ -1,8 +1,18 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import BoozeCard from "../components/boozeCard";
 import ExtraCard from "../components/extraCard"; // Import ExtraCard
 import Navbar from "../components/navbar";
 import AddBooze from "../components/addBooze";
+
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue, set } from "firebase/database";
+
+const firebaseConfig = {
+	databaseURL:
+		"https://boozer-base-default-rtdb.europe-west1.firebasedatabase.app/",
+};
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
 interface Booze {
 	volume: number;
@@ -28,6 +38,71 @@ export default function Inventory() {
 		JSON.parse(localStorage.getItem("savedExtras") || "[]"),
 	);
 
+	const getUserData = React.useCallback(async () => {
+		if (
+			localStorage.getItem("username") === null ||
+			localStorage.getItem("username") === ""
+		) {
+			return;
+		}
+		const userId = "user1";
+		const userData = ref(database, `users/${userId}`);
+
+		onValue(userData, (snapshot) => {
+			const data = snapshot.val();
+			const booze = data.booze;
+			const extra = data.extra;
+			const recepies = data.recepies;
+			console.log(booze, extra, recepies);
+			setSavedBooze(booze);
+			setSavedExtras(extra);
+		});
+	}, []);
+
+	const setUserBooze = React.useCallback((booze: Booze[]) => {
+		if (
+			localStorage.getItem("username") === null ||
+			localStorage.getItem("username") === ""
+		) {
+			return;
+		}
+		const userId = "user1";
+		const userBooze = ref(database, `users/${userId}/booze`);
+
+		set(userBooze, booze);
+	}, []);
+
+	const setUserExtras = React.useCallback((extra: Extras[]) => {
+		if (
+			localStorage.getItem("username") === null ||
+			localStorage.getItem("username") === ""
+		) {
+			return;
+		}
+		const userId = "user1";
+		const userExtras = ref(database, `users/${userId}/extra`);
+
+		set(userExtras, extra);
+	}, []);
+
+	// Fetch from localStorage when the component mounts
+	React.useEffect(() => {
+		getUserData();
+	}, [getUserData]);
+
+	React.useEffect(() => {
+		setUserBooze(
+			JSON.parse(localStorage.getItem("savedBooze") || "[]") as Booze[],
+		);
+	}, [setUserBooze]);
+
+	React.useEffect(() => {
+		setUserExtras(
+			JSON.parse(localStorage.getItem("savedExtras") || "[]") as Extras[],
+		);
+	}, [setUserExtras]);
+
+	// Save to localStorage when the savedBooze state changes
 	useEffect(() => {
 		localStorage.setItem("savedBooze", JSON.stringify(savedBooze));
 	}, [savedBooze]);
@@ -49,8 +124,8 @@ export default function Inventory() {
 					setSavedBooze={setSavedBooze}
 					setSavedExtras={setSavedExtras}
 				/>
-				<h2>Booze</h2>
-				<div className="boozeList" id="boozeList">
+				<h2 id="boozeList">Booze</h2>
+				<div className="boozeList">
 					{savedBooze.map((booze, index) => (
 						<BoozeCard
 							// biome-ignore lint/suspicious/noArrayIndexKey: <I dont care about index>
@@ -63,8 +138,8 @@ export default function Inventory() {
 				</div>
 				<div className="divider" />
 
-				<h2>Extras</h2>
-				<div className="extrasList" id="extrasList">
+				<h2 id="extrasList">Extras</h2>
+				<div className="extrasList">
 					{savedExtras.map((extra, index) => (
 						<ExtraCard
 							// biome-ignore lint/suspicious/noArrayIndexKey: <I dont care about index>

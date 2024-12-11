@@ -23,6 +23,7 @@ Extra: `;
 	const [dropdown2Visible, setDropdown2Visible] = useState(false);
 	const [dropOutVisible, setDropOutVisible] = useState(false);
 	const [dropdownContent, setDropdownContent] = useState("");
+	const [toggleLogin, setToggleLogin] = useState(false);
 
 	const [replaceData, setReplaceData] = useState("");
 
@@ -49,6 +50,10 @@ Extra: `;
 		setDropOutVisible(!dropOutVisible);
 	};
 
+	const popupLogin = () => {
+		setToggleLogin(!toggleLogin);
+	};
+
 	const copyToClipboard = () => {
 		const textarea = document.createElement("textarea");
 		textarea.value = promptText;
@@ -72,6 +77,26 @@ Extra: `;
 			>
 				Boozer
 			</h1>
+
+			{
+				// This is the login popup
+				toggleLogin && (
+					<div className="loginPopup">
+						<div className="loginPopupInner">
+							{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+							<div className="loginPopupClose" onClick={() => popupLogin()}>
+								<h2>X</h2>
+							</div>
+							<h2>Login</h2>
+							<input type="text" placeholder="Username" />
+							<input type="password" placeholder="Password" />
+							<button type="button" className="loginButton">
+								Login
+							</button>
+						</div>
+					</div>
+				)
+			}
 
 			{location.pathname === "/inventory" && (
 				<div className="boozeButtons">
@@ -266,8 +291,9 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/")}
-						className={`nav-button ${location.pathname === "/" ? "active" : ""
-							}`}
+						className={`nav-button ${
+							location.pathname === "/" ? "active" : ""
+						}`}
 					>
 						Home
 					</button>
@@ -276,8 +302,9 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/inventory")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/inventory")}
-						className={`nav-button ${location.pathname === "/inventory" ? "active" : ""
-							}`}
+						className={`nav-button ${
+							location.pathname === "/inventory" ? "active" : ""
+						}`}
 					>
 						Inventory
 					</button>
@@ -286,8 +313,9 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/recipes")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/recipes")}
-						className={`nav-button ${location.pathname === "/recipes" ? "active" : ""
-							}`}
+						className={`nav-button ${
+							location.pathname === "/recipes" ? "active" : ""
+						}`}
 					>
 						Recipes
 					</button>
@@ -296,10 +324,20 @@ Extra: `;
 						type="button"
 						onClick={() => navigate("/about")}
 						onKeyUp={(e) => e.key === "Enter" && navigate("/about")}
-						className={`nav-button ${location.pathname === "/about" ? "active" : ""
-							}`}
+						className={`nav-button ${
+							location.pathname === "/about" ? "active" : ""
+						}`}
 					>
 						About
+					</button>
+
+					<button
+						type="button"
+						onClick={() => popupLogin()}
+						onKeyUp={(e) => e.key === "Enter" && popupLogin()}
+						className={"nav-button"}
+					>
+						Login
 					</button>
 				</div>
 			)}
