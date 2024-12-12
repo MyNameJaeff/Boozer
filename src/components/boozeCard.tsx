@@ -196,10 +196,7 @@ export default function BoozeCard({
 
 						{booze.imageUrl && (
 							<img
-								src={
-									booze.imageUrl ||
-									"https://via.placeholder.com/150?text=No+Image"
-								}
+								src={booze.imageUrl}
 								alt={booze.name}
 								className="booze-image"
 							/>

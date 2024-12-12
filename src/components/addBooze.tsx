@@ -44,7 +44,7 @@ export default function AddBooze({
 					percent: Number(percent),
 					name,
 					brand,
-					imageUrl: imageUrl || "https://via.placeholder.com/150?text=No+Image",
+					imageUrl,
 					notes: "",
 				};
 
@@ -64,7 +64,7 @@ export default function AddBooze({
 				const extra: Extras = {
 					name,
 					amount,
-					imageUrl: imageUrl || "https://via.placeholder.com/150?text=No+Image",
+					imageUrl,
 					notes: "",
 				};
 				console.log("Extra saved:", extra);
